@@ -2,7 +2,7 @@
   "name": "flakeguard-detector",
   "displayName": "FlakeGuard Detector",
   "description": "Find Playwright flakiness risks inside VS Code with inline warnings, explanations, quick fixes, and a file-level summary.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "abhisheksahu-qa",
   "icon": "images/icon.png",
   "repository": {
