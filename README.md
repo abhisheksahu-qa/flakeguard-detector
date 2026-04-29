@@ -62,7 +62,7 @@ await page.getByRole('button', { name: 'Submit' }).click();
 
 await expect(button).toBeVisible();
 
-How to use
+**How to use**
 Install the extension
 Open a Playwright test file (.spec.ts, .test.ts, .js)
 FlakeGuard will automatically highlight risky patterns
@@ -70,7 +70,7 @@ Use:
 Ctrl + . for Quick Fix
 Hover to see explanation
 
-Flakiness Summary
+**Flakiness Summary**
 
 You can also see a quick summary for the current file.
 
@@ -82,7 +82,7 @@ Run:
     FlakeGuard: Show Flakiness Summary
 This shows how many issues are present in the file.
 
-Notes
+**Notes**
 FlakeGuard is focused on early detection inside the IDE.
 It does not run tests or depend on test execution.
 The goal is to catch common issues while writing code.
