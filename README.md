@@ -46,8 +46,6 @@ It currently detects:
 
 ## Example
 
-## Example
-
 ### Before
 
 ```ts
