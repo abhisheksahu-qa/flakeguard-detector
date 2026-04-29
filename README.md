@@ -3,8 +3,8 @@
 # FlakeGuard Detector
 
 FlakeGuard Detector is a VS Code extension for Playwright tests.
-
-It helps catch common flaky test patterns while you are writing code, instead of finding them later in CI.
+It helps identify common flakiness issues directly inside the editor, such as hard waits, fragile selectors, nth-child usage, force clicks, and non-retrying assertions.
+The extension highlights these patterns as you write code, explains why they can lead to flaky tests, and suggests safer alternatives with quick fixes.
 
 ---
 
