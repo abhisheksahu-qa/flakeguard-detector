@@ -1,0 +1,65 @@
+{
+  "name": "flakeguard-detector",
+  "displayName": "FlakeGuard Detector",
+  "description": "Find Playwright flakiness risks inside VS Code with inline warnings, explanations, quick fixes, and a file-level summary.",
+  "version": "0.0.1",
+  "publisher": "abhisheksahu-qa",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abhisheksahu-qa/flakeguard-detector.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "playwright",
+    "flaky tests",
+    "flakiness",
+    "testing",
+    "automation",
+    "qa",
+    "typescript",
+    "javascript",
+    "diagnostics",
+    "selectors",
+    "test reliability"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Testing",
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:javascript"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "flakeguard.scanFile",
+        "title": "FlakeGuard: Scan Current File"
+      },
+      {
+        "command": "flakeguard.showSummary",
+        "title": "FlakeGuard: Show Flakiness Summary"
+      },
+      {
+        "command": "flakeguard.explainFix",
+        "title": "FlakeGuard: Explain Flaky Pattern"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.3",
+    "@vscode/vsce": "^3.2.1"
+  }
+}
