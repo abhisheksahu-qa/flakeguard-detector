@@ -3,8 +3,10 @@
 # FlakeGuard Detector
 
 FlakeGuard Detector is a VS Code extension for Playwright tests.
-It helps identify common flakiness issues directly inside the editor, such as hard waits, fragile selectors, nth-child usage, force clicks, and non-retrying assertions.
-The extension highlights these patterns as you write code, explains why they can lead to flaky tests, and suggests safer alternatives with quick fixes.
+
+It focuses on identifying common patterns that lead to flaky tests while writing code, such as hard waits, fragile selectors, nth-child usage, force clicks, and non-retrying assertions.
+
+These issues often go unnoticed during development but cause failures later in CI. FlakeGuard highlights them early in the editor and suggests safer alternatives.
 
 ---
 
@@ -12,10 +14,9 @@ The extension highlights these patterns as you write code, explains why they can
 
 Flaky tests are a common issue in test automation.
 
-Small things like hard waits, long CSS selectors, or non-retrying checks often go unnoticed during development.  
-They work sometimes, but fail randomly later.
+Patterns like hard waits, fragile selectors, or non-retrying checks often pass locally but fail in CI.
 
-FlakeGuard focuses on these patterns and highlights them early inside the editor.
+FlakeGuard highlights these patterns early, before they become debugging issues.
 
 ---
 
@@ -45,44 +46,54 @@ It currently detects:
 
 ## Example
 
+## Example
+
 ### Before
 
 ```ts
 await page.waitForTimeout(5000);
-
 await page.locator('div > div > span > button').click();
-
 expect(await button.isVisible()).toBe(true);
 
 ### After 
 
 await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
-
 await page.getByRole('button', { name: 'Submit' }).click();
-
 await expect(button).toBeVisible();
 
-How to use
-Install the extension
-Open a Playwright test file (.spec.ts, .test.ts, .js)
-FlakeGuard will automatically highlight risky patterns
-Use:
-Ctrl + . for Quick Fix
-Hover to see explanation
+---
 
-Flakiness Summary
+## What makes this different
 
-You can also see a quick summary for the current file.
+FlakeGuard works directly inside the editor and focuses on detecting flaky patterns while writing test code.
 
-Steps:
+It does not rely on running tests or analyzing failures later. The goal is to catch issues early, before they become CI failures.
 
-Open Command Palette (Ctrl + Shift + P)
+---
 
-Run:
-    FlakeGuard: Show Flakiness Summary
-This shows how many issues are present in the file.
+## How to use
 
-Notes
+1. Install the extension  
+2. Open a Playwright test file (`.spec.ts`, `.test.ts`, `.js`)  
+3. FlakeGuard highlights risky patterns automatically  
+4. Use:
+   - `Ctrl + .` for Quick Fix  
+   - Hover to see explanation  
+
+---
+
+## Flakiness summary
+
+FlakeGuard provides a simple summary of issues in a file.
+
+Use command palette:
+FlakeGuard: Show Flakiness Summary
+
+This helps quickly understand how many potential flaky patterns exist in a test file.
+
+---
+
+## Notes
 FlakeGuard is focused on early detection inside the IDE.
 It does not run tests or depend on test execution.
 The goal is to catch common issues while writing code.
