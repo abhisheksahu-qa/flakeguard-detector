@@ -138,6 +138,42 @@ If you find this useful or have suggestions, feel free to open an issue or share
 
 ---
 
+## New in v0.0.4 — Context-Aware SafeFix
+
+FlakeGuard now provides context-aware Quick Fix suggestions for common Playwright flakiness patterns.
+
+### What's improved?
+
+- Detects existing locators before suggesting replacements.
+- Replaces hard waits with locator-based waits when sufficient context is available.
+- Suggests removing unnecessary hard waits when the next Playwright action already auto-waits.
+- Converts supported non-retrying assertions into Playwright auto-retrying assertions.
+- Avoids generating placeholder locators when the correct element cannot be identified.
+- Explains why a pattern may cause flaky tests.
+
+### Example
+
+Before:
+
+```ts
+const loginButton = page.getByRole('button', { name: 'Login' });
+
+await page.waitForTimeout(5000);
+await loginButton.click();
+```
+
+After applying SafeFix:
+
+```ts
+const loginButton = page.getByRole('button', { name: 'Login' });
+
+await loginButton.waitFor({ state: 'visible' });
+await loginButton.click();
+```
+
+SafeFix uses existing test context instead of inventing locators.
+Suggestions should still be reviewed before use.
+
 ## License
 
 MIT
