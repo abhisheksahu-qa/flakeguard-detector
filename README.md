@@ -1,155 +1,20 @@
 ![FlakeGuard Detector Banner](./images/banner.png)
 
 # FlakeGuard Detector
-🔗 Install from VS Code Marketplace: https://marketplace.visualstudio.com/items?itemName=abhisheksahu-qa.flakeguard-detector
 
-⭐ If this helps you, please consider starring the repo
+[Install from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=abhisheksahu-qa.flakeguard-detector) | [Source code](https://github.com/abhisheksahu-qa/flakeguard-detector) | MIT License
 
-FlakeGuard Detector is a VS Code extension that helps identify flaky patterns in Playwright tests.
+FlakeGuard Detector highlights common patterns that can make Playwright tests unreliable **while you write them in VS Code**. It explains the risk, suggests safer alternatives and provides Quick Fix actions for supported cases. It does not need to run the test to inspect the code.
 
-It identifies common patterns that lead to flaky tests directly inside the editor, such as hard waits, fragile selectors, nth-child usage, force clicks, and non-retrying assertions.
+## New in v0.0.4: Context-Aware SafeFix
 
-These issues often go unnoticed during development but cause failures later in CI. FlakeGuard helps catch them early and suggests safer alternatives.
+Earlier Quick Fix suggestions could be generic. **Context-Aware SafeFix now looks for locator information already available in the test before suggesting a change.**
 
-It works without running tests and focuses on preventing flaky behavior at the time of writing test code.
-
----
-
-## Why it matters
-This helps reduce test failures in CI and improves overall test reliability.
-
----
-
-## Where this is useful
-
-This is especially useful in Playwright test suites where tests pass locally but fail in CI due to timing issues, unstable selectors, or DOM changes.
-
-FlakeGuard helps identify these problems early while writing tests, reducing debugging time and improving overall test reliability.
-
----
-
-## How to use
-
-1. Install the extension from VS Code Marketplace  
-2. Open any Playwright test file (`.spec.ts`, `.test.ts`, `.js`, `.ts`)
-3. FlakeGuard will highlight risky patterns directly in the editor
-4. Use:
-   - `Ctrl + .` for Quick Fix  
-   - Hover to see explanation
-5. Follow suggestions to improve test stability
-   
----
-
-## What problem this solves
-
-Flaky tests are a common issue in test automation.
-
-Patterns like hard waits, fragile selectors, or non-retrying checks often pass locally but fail in CI.
-
-FlakeGuard highlights these patterns early, before they become debugging issues.
-
----
-
-## What it does
-
-FlakeGuard scans Playwright test files and looks for patterns that usually lead to flaky behavior.
-
-It currently detects:
-
-- Hard waits using `waitForTimeout`
-- Long or structure-based CSS selectors
-- `nth-child` selectors
-- Force clicks (`force: true`)
-- Assertions that do not retry
-
----
-
-## How it helps
-
-- Shows warnings directly in the editor
-- Explains why a pattern may be flaky
-- Suggests safer alternatives
-- Provides quick fixes
-- Generates a simple file-level summary
-
----
-
-## Example (real scenario)
-
-### Before
-
-```ts
-await page.waitForTimeout(5000);
-await page.locator('div > div > span > button').click();
-expect(await button.isVisible()).toBe(true);
-
-### After
-```ts
-await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
-await page.getByRole('button', { name: 'Submit' }).click();
-await expect(button).toBeVisible();
-
-## Hard wait detection
-
-FlakeGuard detects time-based waits like `waitForTimeout`, which can cause flaky tests:
-
-
-![Hard wait warning](./images/flakeguard-hardwait-warning.png)
-
-## Example in VS Code
-
-FlakeGuard highlights flaky patterns directly in the editor:
-
-![FlakeGuard Warning](./images/flakeguard-warning.png)
-
----
-
-## What makes this different
-
-FlakeGuard works directly inside the editor and focuses on detecting flaky patterns while writing test code.
-
-It does not rely on running tests or analyzing failures later. The goal is to catch issues early, before they become CI failures.
-
----
-
-## Flakiness summary
-
-FlakeGuard provides a simple summary of issues in a file.
-
-Use command palette:
-FlakeGuard: Show Flakiness Summary
-
-This helps quickly understand how many potential flaky patterns exist in a test file.
-
----
-
-## Notes
-FlakeGuard is focused on early detection inside the IDE.
-It does not run tests or depend on test execution.
-The goal is to catch common issues while writing code.
-
----
-
-## Feedback
-
-If you find this useful or have suggestions, feel free to open an issue or share feedback.
-
-⭐ Star the repo if it helped you.
-
----
-
-## New in v0.0.4 — Context-Aware SafeFix
-
-FlakeGuard now provides context-aware Quick Fix suggestions for common Playwright flakiness patterns.
-
-### What's improved?
-
-- Detects existing locators before suggesting replacements.
-- Replaces hard waits with locator-based waits when sufficient context is available.
-- Suggests removing unnecessary hard waits when the next Playwright action already auto-waits.
-- Converts supported non-retrying assertions into Playwright auto-retrying assertions.
-- Avoids generating placeholder locators when the correct element cannot be identified.
-- Explains why a pattern may cause flaky tests.
+- Suggests locator-based waits when a suitable existing locator can be identified.
+- Can recommend removing an unnecessary `waitForTimeout()` before a Playwright action that already auto-waits.
+- Suggests auto-retrying Playwright assertions for supported non-retrying checks.
+- Avoids inventing placeholder locators when the target element is unclear.
+- Explains the risk so the engineer can review the change before accepting it.
 
 ### Example
 
@@ -162,7 +27,7 @@ await page.waitForTimeout(5000);
 await loginButton.click();
 ```
 
-After applying SafeFix:
+One supported SafeFix suggestion uses the existing `loginButton` locator:
 
 ```ts
 const loginButton = page.getByRole('button', { name: 'Login' });
@@ -171,8 +36,39 @@ await loginButton.waitFor({ state: 'visible' });
 await loginButton.click();
 ```
 
-SafeFix uses existing test context instead of inventing locators.
-Suggestions should still be reviewed before use.
+Depending on context, removing the hard wait may also be appropriate because Playwright's `click()` action already performs its own actionability checks. **Always review a suggested fix for your test.**
+
+## Patterns FlakeGuard detects
+
+- Hard waits, such as `page.waitForTimeout()`
+- Long, structure-dependent CSS selectors
+- `nth-child` selectors
+- Force clicks (`force: true`)
+- Non-retrying assertions
+
+Warnings appear in the editor, with explanations and available Quick Fixes.
+
+## How to use
+
+1. Install FlakeGuard Detector from the Marketplace.
+2. Open a Playwright JavaScript or TypeScript test in VS Code.
+3. Read any inline warnings and hover over a finding for the explanation.
+4. Use **Ctrl+.** (or **Cmd+.** on macOS) to review available Quick Fixes.
+5. To get an overview, open the Command Palette and run **FlakeGuard: Show Flakiness Summary**.
+
+## What FlakeGuard does not do
+
+FlakeGuard is a preventive code-review aid, not a Playwright test runner. It cannot prove a test is flaky, guarantee a suggested edit will resolve failures, or verify that a locator identifies the intended element in a live application. It flags supported code patterns and helps engineers review them earlier.
+
+## Examples from the editor
+
+![Hard-wait warning in VS Code](./images/flakeguard-hardwait-warning.png)
+
+![FlakeGuard diagnostic in VS Code](./images/flakeguard-warning.png)
+
+## Feedback and development
+
+If you find an incorrect suggestion or have an improvement idea, please open a [GitHub issue](https://github.com/abhisheksahu-qa/flakeguard-detector/issues). See the [changelog](./CHANGELOG.md) for version-specific updates.
 
 ## License
 
